@@ -89,9 +89,13 @@
   /* ---------- 결과 ---------- */
   .resulthead{text-align:center; margin:4px 0 18px;}
   .resulthead .label{display:block;}
-  .cardwrap{border-radius:18px; overflow:hidden; background:#fff;
+  .cardwrap{position:relative; border-radius:18px; overflow:hidden; background:#fff;
     box-shadow:0 22px 50px -28px rgba(27,35,32,.55), 0 0 0 1px rgba(27,35,32,.05);}
   #cardCanvas{display:block; width:100%; height:auto;}
+  /* 캔버스 위에 같은 그림을 깔아 두어 카드를 길게 눌러도 ‘사진에 저장’이 뜨게 한다(모바일) */
+  #cardImg{position:absolute; inset:0; width:100%; height:auto; display:block;
+    opacity:0; pointer-events:none; -webkit-touch-callout:default; -webkit-user-select:none;}
+  #cardImg.on{opacity:1; pointer-events:auto;}
   .actions{margin-top:18px; display:grid; gap:10px;}
   .toast{position:fixed; left:50%; bottom:calc(26px + env(safe-area-inset-bottom)); transform:translate(-50%,14px);
     background:rgba(27,35,32,.94); color:#fff; font-size:14px; line-height:1.4; padding:12px 18px; border-radius:12px;
@@ -101,10 +105,12 @@
     align-items:flex-end; justify-content:center; padding:0 0 env(safe-area-inset-bottom);}
   .sheet.on{display:flex;}
   .sheet .inner{background:var(--paper); width:100%; max-width:560px; border-radius:20px 20px 0 0;
-    padding:22px 22px calc(22px + env(safe-area-inset-bottom)); text-align:center;}
+    padding:22px 22px calc(22px + env(safe-area-inset-bottom)); text-align:center;
+    max-height:90dvh; overflow-y:auto; -webkit-overflow-scrolling:touch;}
   .sheet h2{font-size:17px; margin:0 0 6px;}
   .sheet p{font-size:14px; color:var(--sub); line-height:1.6; margin:0 0 16px;}
-  .sheet img{width:100%; border-radius:12px; display:block; margin-bottom:16px;}
+  .sheet img{width:auto; max-width:100%; max-height:52dvh; margin:0 auto 16px; border-radius:12px; display:block;
+    -webkit-touch-callout:default !important; -webkit-user-select:none; user-select:none;}
   .foot{margin-top:22px; text-align:center; font-size:11.5px; color:var(--accent-soft); letter-spacing:.04em;}
 </style>
 </head>
@@ -154,7 +160,7 @@
     <div class="resulthead">
       <span class="label">MYTI 결과</span>
     </div>
-    <div class="cardwrap"><canvas id="cardCanvas" width="1080" height="1350"></canvas></div>
+    <div class="cardwrap"><canvas id="cardCanvas" width="1080" height="1350"></canvas><img id="cardImg" alt="결과 카드" /></div>
     <div class="actions">
       <button class="btn btn-primary" id="btnSave">결과 카드 이미지 저장</button>
       <div class="btnrow">
@@ -170,8 +176,8 @@
 
 <div class="sheet" id="sheet">
   <div class="inner">
-    <h2>카드를 길게 눌러 저장하세요</h2>
-    <p>아이폰은 이미지가 새 창에 열립니다.<br />이미지를 <b>길게 눌러 ‘사진에 저장’</b>을 눌러 주세요.</p>
+    <h2 id="sheetTitle">카드를 길게 눌러 저장하세요</h2>
+    <p id="sheetDesc">아래 카드를 <b>길게 눌러 ‘사진 앱에 저장’</b>을 누르면 사진 앱에 들어갑니다.</p>
     <img id="sheetImg" alt="결과 카드" />
     <button class="btn btn-ghost" id="btnSheetClose">닫기</button>
   </div>
@@ -885,9 +891,26 @@ function scoreAnswers(answers) {
 
   function drawCard() {
     drawCardOnce();
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(() => drawCardOnce());
+    if (document.fonts && document.fonts.ready && document.fonts.ready.then) {
+      document.fonts.ready.then(() => {
+        drawCardOnce();
+        syncCardImage();
+      });
+    } else {
+      syncCardImage();
     }
+  }
+
+  // 결과 카드 자체를 길게 눌러도 저장되도록, 캔버스를 같은 크기의 이미지로 덮어 둔다(모바일만)
+  function syncCardImage() {
+    if (!isMobile) return;
+    const img = $("cardImg");
+    if (!img) return;
+    try {
+      if (!result) return;
+      img.src = $("cardCanvas").toDataURL("image/png");
+      img.classList.add("on");
+    } catch (e) {}
   }
 
   function drawCardOnce() {
@@ -914,8 +937,14 @@ function scoreAnswers(answers) {
     ].join("\n");
   }
 
-  const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) ||
+  const UA = navigator.userAgent || "";
+  const isIOS = /iP(hone|ad|od)/.test(UA) ||
     (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const isMobile = isIOS || /Android|iPhone|iPad|iPod|Mobile/i.test(UA);
+  const isKakao = /KAKAOTALK/i.test(UA);
+  // 카톡·네이버·인스타 등 인앱 브라우저는 이미지 저장이 막히는 경우가 있다
+  const isInApp = isKakao ||
+    /NAVER|Instagram|FBAN|FBAV|FB_IAB|Line\/|LINE\/|DaumApps|KAKAOSTORY|everytimeApp/i.test(UA);
 
   function dataUrlToBlob(dataUrl) {
     const bin = atob(dataUrl.split(",")[1]);
@@ -946,31 +975,95 @@ function scoreAnswers(answers) {
     }, 420);
   }
 
+  // 결과 카드 저장
+  //   1순위(모바일): 네이티브 공유 시트 — ‘이미지 저장(사진에 저장)’과 카톡 보내기를 한 번에
+  //   2순위: #sheet 폴백 — blob: 대신 data: URI 로 넣고 길게 눌러 저장하게 안내
+  //   그 외(데스크톱): 파일 내려받기
+  const SHEET_SAFARI = {
+    title: "카드를 길게 눌러 저장하세요",
+    desc: "아래 카드를 <b>길게 눌러 ‘사진 앱에 저장’</b>을 누르면 사진 앱에 들어갑니다.",
+  };
+  const SHEET_INAPP = {
+    title: isKakao ? "카톡 안에서는 저장이 막힐 수 있어요" : "인앱 브라우저에서는 저장이 막힐 수 있어요",
+    desc: (isKakao ? "카톡 안에서는" : "지금 브라우저에서는") +
+      " 이미지 저장이 막히는 경우가 있어요. 아래 카드를 길게 눌러 안 되면 " +
+      "<b>오른쪽 아래 ‘…’ → ‘Safari로 열기’</b>(또는 다른 브라우저로 열기)를 누른 뒤 저장해 주세요.",
+  };
+
+  function showSheet(canvas, blob) {
+    let src = "";
+    try {
+      // iOS WKWebView·사파리에서는 blob: URL 이미지를 길게 눌러도 저장이 실패하기 일쑤다
+      src = canvas.toDataURL("image/png");
+    } catch (e) {
+      if (blob) src = URL.createObjectURL(blob);
+    }
+    $("sheetImg").src = src;
+    window.__lastCardUrl = src;
+    const copy = isInApp ? SHEET_INAPP : SHEET_SAFARI;
+    $("sheetTitle").textContent = copy.title;
+    $("sheetDesc").innerHTML = copy.desc;
+    $("sheet").classList.add("on");
+  }
+
+  function downloadBlob(blob, name) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      document.body.removeChild(a);
+    }, 1000);
+    toast("결과 카드를 저장했어요 (" + name + ")");
+  }
+
+  // 공유 시트에 파일을 넘긴다. 시트가 떴으면 true(폴백 불필요), 못 띄우면 false.
+  function shareCardImage(canvas, name) {
+    if (!isMobile) return false;
+    if (typeof navigator.share !== "function" || typeof File !== "function") return false;
+    let file = null;
+    try {
+      // toBlob 은 비동기라 사용자 탭 권한이 풀린다 → 공유 시트는 탭 안에서 동기로 띄운다
+      file = new File([dataUrlToBlob(canvas.toDataURL("image/png"))], name, { type: "image/png" });
+    } catch (e) {
+      return false;
+    }
+    if (typeof navigator.canShare !== "function" || !navigator.canShare({ files: [file] })) return false;
+    let p = null;
+    try {
+      p = navigator.share({ files: [file], title: "MYTI · " + result.code });
+    } catch (e) {
+      return false;
+    }
+    if (!p || typeof p.then !== "function") return false;
+    p.then(
+      () => {},
+      (err) => {
+        // 사용자가 공유 시트를 그냥 닫은 경우는 오류가 아니다
+        if (err && err.name === "AbortError") return;
+        showSheet(canvas, file);
+      }
+    );
+    return true;
+  }
+
   function saveImage() {
+    if (!result) return;
     const canvas = $("cardCanvas");
     const name = "취향유형-" + result.code + ".png";
+    if (shareCardImage(canvas, name)) return;
     cardBlob((blob) => {
       if (!blob) {
         toast("이미지를 만들지 못했어요. 잠시 후 다시 시도해 주세요.");
         return;
       }
-      const url = URL.createObjectURL(blob);
-      if (isIOS) {
-        // 아이폰 사파리는 내려받기 대신 새 창에 이미지를 열고 길게 눌러 저장하게 안내
-        $("sheetImg").src = url;
-        $("sheet").classList.add("on");
-        window.__lastCardUrl = url;
+      if (isMobile) {
+        showSheet(canvas, blob);
         return;
       }
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = name;
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(() => {
-        document.body.removeChild(a);
-      }, 1000);
-      toast("결과 카드를 저장했어요 (" + name + ")");
+      downloadBlob(blob, name);
     });
   }
 
