@@ -125,6 +125,50 @@
   .detail .pair{display:flex; gap:7px; align-items:baseline; flex-wrap:wrap; margin:0 0 8px;}
   .detail .pair b{font-size:16px; color:var(--ink); letter-spacing:.01em;}
   .detail .pair em{font-style:normal; font-size:13.5px; color:var(--accent); font-weight:600;}
+
+  /* ---------- 나라별 도시 · 친구 궁합 패널 ---------- */
+  .extras{margin:12px 0 0; display:grid; gap:12px;}
+  .panel{background:var(--paper2); border:1px solid var(--hair); border-radius:16px; padding:16px 17px 17px;}
+  .panel h3{font-size:12px; letter-spacing:.1em; color:var(--accent); margin:0 0 8px; font-weight:700;}
+  .panel .sub{font-size:12.5px; line-height:1.55; color:var(--sub); margin:0 0 12px;}
+  .seg{display:flex; gap:4px; background:var(--tint); border-radius:12px; padding:3px; margin:0 0 4px;}
+  .seg-btn{flex:1 1 0; min-width:0; appearance:none; border:0; background:transparent; color:var(--accent);
+    font-family:inherit; font-size:13.5px; font-weight:600; padding:9px 4px; border-radius:9px;
+    cursor:pointer; white-space:nowrap; letter-spacing:-.01em; touch-action:manipulation;}
+  .seg-btn.on{background:#fff; color:var(--ink); box-shadow:0 1px 2px rgba(27,35,32,.1);}
+  .citylist{list-style:none; margin:0; padding:0;}
+  .citylist li{display:flex; flex-wrap:wrap; gap:2px 8px; align-items:baseline;
+    padding:10px 0 9px; border-top:1px solid var(--hair); font-size:14.5px; line-height:1.5;}
+  .citylist li:first-child{border-top:0; padding-top:4px;}
+  .citylist b{color:var(--accent); font-weight:700; flex:0 0 auto;}
+  .citylist span{color:var(--sub); flex:1 1 150px; min-width:0;}
+  .axispick{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:6px; margin:0 0 14px;}
+  .pick{min-width:0;}
+  .pick-cap{font-size:10px; letter-spacing:.04em; color:var(--sub); text-align:center; margin:0 0 3px;}
+  .pick-pill{display:flex; gap:2px; background:var(--tint); border-radius:11px; padding:2px;}
+  .pick-btn{flex:1 1 0; min-width:0; appearance:none; border:0; background:transparent; font-family:inherit;
+    cursor:pointer; border-radius:9px; padding:6px 1px; display:flex; flex-direction:column; align-items:center;
+    line-height:1.15; color:var(--accent); touch-action:manipulation;}
+  .pick-btn b{font-size:14px; font-weight:700; letter-spacing:.01em;}
+  .pick-btn i{font-style:normal; font-size:9.5px; color:var(--sub); letter-spacing:-.03em;}
+  .pick-btn.on{background:var(--accent); color:#fff;}
+  .pick-btn.on i{color:rgba(255,255,255,.82);}
+  .matehead{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin:0;}
+  .matehead b{font-size:21px; letter-spacing:.01em; color:var(--ink);}
+  .matehead em{font-style:normal; font-size:13.5px; font-weight:600; color:var(--accent);}
+  .badge{display:inline-block; margin:9px 0 0; padding:6px 11px; border-radius:99px; background:var(--tint);
+    color:var(--accent); font-size:12.5px; font-weight:700; letter-spacing:-.01em;}
+  .badge.warm{background:#F6E9DE; color:#A2552F;}
+  .mline{font-size:13px; line-height:1.62; color:var(--sub); margin:9px 0 0;}
+  .mblock{margin:14px 0 0;}
+  .mblock h4{font-size:11.5px; letter-spacing:.06em; color:var(--accent); font-weight:700; margin:0 0 8px;}
+  .mblock ul{list-style:none; margin:0; padding:0; display:grid; gap:9px;}
+  .mblock li{display:flex; gap:7px; font-size:13.5px; line-height:1.55; align-items:flex-start;}
+  .mblock li b{flex:0 0 auto; font-size:11px; font-weight:700; color:var(--accent); background:var(--tint);
+    border-radius:7px; padding:3px 7px; margin-top:1px; white-space:nowrap; letter-spacing:-.01em;}
+  .mblock li span{flex:1 1 auto; min-width:0; color:var(--ink);}
+  .mblock.caution li b{background:#F6E9DE; color:#A2552F;}
+  .panel .btn.small{font-size:14px; font-weight:600; padding:12px 14px; margin-top:14px;}
 </style>
 </head>
 <body>
@@ -175,6 +219,25 @@
     </div>
     <div class="cardwrap"><canvas id="cardCanvas" width="1080" height="1350"></canvas><img id="cardImg" alt="결과 카드" /></div>
     <div class="detail" id="detail"></div>
+
+    <div class="extras">
+      <!-- 나라별 맞춤 도시 -->
+      <section class="panel" id="cityPanel">
+        <h3>나라별 맞춤 도시</h3>
+        <p class="sub" id="citySub">내 결에 맞는 도시를 나라별로 골라 봤어요</p>
+        <div class="seg" id="cityTabs" role="tablist" aria-label="나라 선택"></div>
+        <ul class="citylist" id="cityList"></ul>
+      </section>
+
+      <!-- 친구와 여행 궁합 -->
+      <section class="panel" id="matePanel">
+        <h3>친구와 여행 궁합 보기</h3>
+        <p class="sub" id="mateSub">친구의 네 글자를 누르면 둘의 궁합과 역할 분담이 바로 나와요</p>
+        <div class="axispick" id="axisPick"></div>
+        <div class="mateout" id="mateOut"></div>
+        <button class="btn btn-ghost small" id="btnCopyMate">이 궁합 결과 복사</button>
+      </section>
+    </div>
     <div class="actions">
       <button class="btn btn-primary" id="btnSave">결과 카드 이미지 저장</button>
       <div class="btnrow">
@@ -219,6 +282,8 @@ const QUESTIONS = [{"n": 1,"axis": "RA","q": "3박 4일 여행, 어느 쪽이 �
         규칙 — 걸음의 리듬(R/A)과 계획 방식(P/F)이 정반대, 사람 수(S/G)와 장소 취향(N/D)은 같다.
         내가 놓치는 '더 움직이기'와 '즉흥으로 트는 것'을 채워 주면서, 같이 갈 사람과
         가고 싶은 동네가 어긋나지 않아 실제 여행에서 도움이 되는 짝.
+     countryCities : 결과 화면 '나라별 맞춤 도시' 탭 (kr 한국 · jp 일본 · world 그 외 해외, 각 2~3곳 + 한 줄 이유)
+        기존 cities(카드 ②)는 그대로 두고, 화면에서만 나라별로 더 넓게 보여 준다.
      mate / mateWhy : ④ 나와 잘 맞는 동행
         규칙 — 리듬(R/A)·사람 수(S/G)·장소 취향(N/D)이 같고 계획 방식(P/F)만 살짝 다르다.
         같은 속도로 같은 곳을 좋아하니 같이 가도 부딪히지 않고, 계획만 서로 메워 준다.
@@ -244,6 +309,22 @@ const TYPES = {
     complementWhy: "내가 앉아 쉬는 사이 다음 골목을 찾아 두고, 계획이 틀어져도 바로 다른 길을 열어 줘요",
     mate: "RSFN",
     mateWhy: "걸음이 느리고 새 골목을 좋아하는 건 같아서, 내가 동선만 정해 두면 편해요",
+    countryCities: {
+      kr: [
+        { name: "경주", why: "한옥 골목을 하루에 한 곳씩 걸어요" },
+        { name: "서울 서촌", why: "지도 한 장 들고 새 골목을 찾아요" },
+        { name: "전주", why: "한옥마을 옆 골목이 비어 있어요" },
+      ],
+      jp: [
+        { name: "교토", why: "골목마다 앉아 쉴 자리가 있어요" },
+        { name: "나고야", why: "붐비지 않아 새 골목을 천천히 봐요" },
+        { name: "삿포로", why: "새로 생긴 카페가 넓게 퍼져 있어요" },
+      ],
+      world: [
+        { name: "타이난", why: "좁은 골목에 오래된 가게가 많아요" },
+        { name: "리스본", why: "트램 노선만 외우면 골목은 마음대로예요" },
+      ],
+    },
   },
   RSPD: {
     name: "고즈넉한 단골 산책자",
@@ -258,6 +339,22 @@ const TYPES = {
     complementWhy: "늘 가던 길만 고집하는 나를 끌고 새 골목까지 데려가 줘요",
     mate: "RSFD",
     mateWhy: "익숙한 곳을 좋아하는 마음은 같은데, 그날 기분 따라 시간을 정해서 편해요",
+    countryCities: {
+      kr: [
+        { name: "경주", why: "한 번 가면 다시 찾게 되는 길이에요" },
+        { name: "제주 서귀포", why: "한 집에 머물며 같은 길을 걸어요" },
+        { name: "안동", why: "조용해서 해마다 같은 길을 걸어요" },
+      ],
+      jp: [
+        { name: "교토", why: "단골처럼 다닐 동네가 생겨요" },
+        { name: "후쿠오카", why: "가까워서 해마다 같은 코스로 가요" },
+        { name: "나고야", why: "늘 가던 자리를 다시 확인해요" },
+      ],
+      world: [
+        { name: "타이난", why: "오래된 가게가 해마다 그대로예요" },
+        { name: "리스본", why: "같은 트램, 같은 카페를 다시 찾아요" },
+      ],
+    },
   },
   RSFN: {
     name: "혼자 떠나는 즉흥 여행자",
@@ -272,6 +369,21 @@ const TYPES = {
     complementWhy: "내가 자꾸 미루는 예약과 동선을 미리 챙겨 둬서, 그 덕에 하루가 알차져요",
     mate: "RSPN",
     mateWhy: "둘 다 느리게 걷는데, 그 사람이 지도를 미리 봐 둬서 길을 잃지 않아요",
+    countryCities: {
+      kr: [
+        { name: "강릉", why: "바다 앞 카페에서 하루가 다 가요" },
+        { name: "속초", why: "숙소만 잡고 동네를 마음대로 걸어요" },
+      ],
+      jp: [
+        { name: "나고야", why: "정해진 코스가 없어 즉흥으로 걷기 좋아요" },
+        { name: "삿포로", why: "숙소 잡고 골목 카페를 찾아다녀요" },
+        { name: "교토", why: "큰길만 피하면 조용한 골목이 나와요" },
+      ],
+      world: [
+        { name: "치앙마이", why: "계획 없이 오래 머물기 좋아요" },
+        { name: "리스본", why: "트램 타고 마음대로 내려요" },
+      ],
+    },
   },
   RSFD: {
     name: "한 도시에 눌러앉는 여행자",
@@ -286,6 +398,21 @@ const TYPES = {
     complementWhy: "내가 같은 자리에만 머물면, 그 사람이 걸어서 더 안쪽 골목까지 데려가요",
     mate: "RSPD",
     mateWhy: "한 곳에 오래 있는 걸 둘 다 좋아해서, 일정이 느긋해도 서운하지 않아요",
+    countryCities: {
+      kr: [
+        { name: "제주 서귀포", why: "한 집에 머물며 천천히 돌아요" },
+        { name: "통영", why: "바다 마을 하나에 눌러앉아요" },
+      ],
+      jp: [
+        { name: "교토", why: "일주일이면 동네 사람처럼 지내요" },
+        { name: "후쿠오카", why: "가까운 도시에 오래 머물기 좋아요" },
+        { name: "삿포로", why: "한 동네에 머물며 매일 같은 길을 걸어요" },
+      ],
+      world: [
+        { name: "치앙마이", why: "한 달 머무는 사람이 많아요" },
+        { name: "타이난", why: "같은 골목을 매일 걸어요" },
+      ],
+    },
   },
   RGPN: {
     name: "꼼꼼한 소수 여행 기획자",
@@ -300,6 +427,23 @@ const TYPES = {
     complementWhy: "내가 짠 일정에 그 사람이 즉흥 코스를 얹어서 지루할 틈이 없어요",
     mate: "RGFN",
     mateWhy: "알찬 하루를 좋아하는 건 같고, 그 사람이 사람들 사이를 편하게 이끌어 줘요",
+    countryCities: {
+      kr: [
+        { name: "서울 성수", why: "새 가게가 계속 생겨 반나절이 짧아요" },
+        { name: "부산", why: "새로 생긴 동네를 표로 짜서 돌아요" },
+        { name: "전주", why: "동선이 단순해 둘셋이 알차게 돌아요" },
+      ],
+      jp: [
+        { name: "도쿄", why: "동네마다 볼 게 달라 하루가 꽉 차요" },
+        { name: "후쿠오카", why: "짧게 다녀오기 좋게 동선이 짜여요" },
+        { name: "오사카", why: "새로 생긴 가게를 하루에 묶어 돌아요" },
+      ],
+      world: [
+        { name: "타이베이", why: "골목과 야시장을 하루에 다 돌아요" },
+        { name: "싱가포르", why: "짧게 알차게 다녀오기 좋아요" },
+        { name: "런던", why: "동네마다 결이 달라 지하철로 짜요" },
+      ],
+    },
   },
   RGPD: {
     name: "차분한 모임 길잡이",
@@ -314,6 +458,22 @@ const TYPES = {
     complementWhy: "내가 늘 가던 길만 걸을 때, 그 사람이 더 멀리까지 발을 넓혀 줘요",
     mate: "RGFD",
     mateWhy: "느긋하게 다니는 속도가 같아서, 여럿이어도 서로 재촉하지 않아요",
+    countryCities: {
+      kr: [
+        { name: "경주", why: "한적해서 여럿이 편히 돌아요" },
+        { name: "전주", why: "한옥 마을 동선이 단순해요" },
+        { name: "여수", why: "바다 앞 숙소에서 여럿이 쉬어요" },
+      ],
+      jp: [
+        { name: "후쿠오카", why: "가까워서 무리 없이 다녀와요" },
+        { name: "교토", why: "예약만 미리 하면 여럿도 조용해요" },
+        { name: "나고야", why: "넓고 한적해 여럿이 편해요" },
+      ],
+      world: [
+        { name: "다낭", why: "리조트 예약만 하면 여럿이 편해요" },
+        { name: "하노이", why: "숙소와 식당만 잡으면 여럿이 편해요" },
+      ],
+    },
   },
   RGFN: {
     name: "여유로운 나들이 반장",
@@ -328,6 +488,21 @@ const TYPES = {
     complementWhy: "내가 다 같이 쉬자고 할 때, 그 사람이 알찬 코스를 하나씩 얹어 줘요",
     mate: "RGPN",
     mateWhy: "다 같이 노는 걸 좋아해서, 그 사람이 짠 일정에 나는 여유만 보태요",
+    countryCities: {
+      kr: [
+        { name: "강릉", why: "바다 보며 여럿이 쉬기 좋아요" },
+        { name: "속초", why: "큰 틀만 잡고 다 같이 쉬어요" },
+      ],
+      jp: [
+        { name: "후쿠오카", why: "야타이에서 다 같이 앉아요" },
+        { name: "삿포로", why: "넓은 거리를 여럿이 느긋하게 걸어요" },
+        { name: "도쿄", why: "새로 생긴 곳을 다 같이 구경해요" },
+      ],
+      world: [
+        { name: "다낭", why: "리조트에서 여럿이 쉬기 좋아요" },
+        { name: "발리", why: "풀빌라 하나 잡고 다 같이 쉬어요" },
+      ],
+    },
   },
   RGFD: {
     name: "편안한 단골 모임 총무",
@@ -342,6 +517,22 @@ const TYPES = {
     complementWhy: "내가 느긋하게만 다니자 할 때, 그 사람이 하루를 조금 더 알차게 채워 줘요",
     mate: "RGPD",
     mateWhy: "익숙한 곳을 좋아하는 마음이 같아서, 어디를 가도 의견이 잘 맞아요",
+    countryCities: {
+      kr: [
+        { name: "경주", why: "매년 가도 질리지 않는 길이에요" },
+        { name: "부산", why: "해마다 같은 바다와 시장으로 가요" },
+        { name: "여수", why: "늘 가던 식당에 다 같이 앉아요" },
+      ],
+      jp: [
+        { name: "후쿠오카", why: "해마다 같은 코스로 다녀와요" },
+        { name: "나고야", why: "늘 가던 식당이 그대로 있어요" },
+        { name: "교토", why: "익숙한 절과 카페를 다시 찾아요" },
+      ],
+      world: [
+        { name: "타이난", why: "오래된 가게가 많아 여럿이 편해요" },
+        { name: "방콕", why: "늘 가던 숙소와 식당이 있어요" },
+      ],
+    },
   },
   ASPN: {
     name: "알찬 초행길 전문가",
@@ -356,6 +547,21 @@ const TYPES = {
     complementWhy: "내가 하루를 꽉 채우면, 그 사람이 중간중간 쉬는 시간을 만들어 줘요",
     mate: "ASFN",
     mateWhy: "부지런히 도는 속도는 같은데, 그 사람이 즉흥 코스를 하나씩 얹어 줘요",
+    countryCities: {
+      kr: [
+        { name: "서울 성수", why: "새 가게를 하루에 다 돌 수 있어요" },
+        { name: "부산", why: "새 동네까지 걸어서 하루에 봐요" },
+      ],
+      jp: [
+        { name: "도쿄", why: "처음 가도 동선을 짜기 쉬워요" },
+        { name: "오사카", why: "새 골목이 끝없이 이어져요" },
+        { name: "삿포로", why: "넓은 도시를 하루에 알차게 돌아요" },
+      ],
+      world: [
+        { name: "홍콩", why: "트램 타고 골목 구경이 재밌어요" },
+        { name: "타이베이", why: "지하철로 하루를 꽉 채워요" },
+      ],
+    },
   },
   ASPD: {
     name: "발 빠른 현지 탐험가",
@@ -370,6 +576,22 @@ const TYPES = {
     complementWhy: "내가 계속 걸으려 할 때, 그 사람이 앉아 쉴 자리를 미리 찾아 둬요",
     mate: "ASFD",
     mateWhy: "아는 동네를 끝까지 걸어 보는 취향이 같아서, 같이 가면 지루할 틈이 없어요",
+    countryCities: {
+      kr: [
+        { name: "서울 성수", why: "몇 번을 가도 새 골목이 나와요" },
+        { name: "부산", why: "골목과 시장이 끝없이 이어져요" },
+        { name: "통영", why: "좁은 골목을 끝까지 걸어 봐요" },
+      ],
+      jp: [
+        { name: "교토", why: "아는 골목이 많아질수록 재밌어요" },
+        { name: "오사카", why: "걸어서 다닐 골목이 끝없어요" },
+        { name: "도쿄", why: "아는 동네를 한 블록씩 더 파고들어요" },
+      ],
+      world: [
+        { name: "홍콩", why: "골목이 좁고 깊어 걸을 맛이 나요" },
+        { name: "파리", why: "동네마다 다른 결이라 걸어서 돌아요" },
+      ],
+    },
   },
   ASFN: {
     name: "가벼운 즉흥 탐험가",
@@ -384,6 +606,22 @@ const TYPES = {
     complementWhy: "내가 즉흥적으로 움직일 때, 그 사람이 예약과 동선을 미리 받쳐 줘요",
     mate: "ASPN",
     mateWhy: "혼자 부지런히 도는 게 같아서, 같이 있어도 서로 기다리게 하지 않아요",
+    countryCities: {
+      kr: [
+        { name: "강릉", why: "당일로 떠나기 좋아요" },
+        { name: "부산", why: "바다와 골목을 마음대로 오가요" },
+        { name: "양양", why: "숙소만 잡고 서핑과 골목을 오가요" },
+      ],
+      jp: [
+        { name: "오사카", why: "골목마다 새 먹거리가 있어요" },
+        { name: "삿포로", why: "걷다 보면 새 골목이 나와요" },
+        { name: "도쿄", why: "지하철 타고 안 가 본 동네로 가요" },
+      ],
+      world: [
+        { name: "하노이", why: "골목마다 새 국수가 있어요" },
+        { name: "방콕", why: "먹고 사고 마사지까지 하루에 돼요" },
+      ],
+    },
   },
   ASFD: {
     name: "동네 구석구석 발품꾼",
@@ -398,6 +636,22 @@ const TYPES = {
     complementWhy: "내가 걸음만 앞세울 때, 그 사람이 쉬는 시간과 순서를 챙겨 줘요",
     mate: "ASPD",
     mateWhy: "같은 동네를 몇 번씩 다시 걷는 취향이라, 지도 없이도 잘 맞아요",
+    countryCities: {
+      kr: [
+        { name: "부산", why: "골목과 시장이 끝없이 이어져요" },
+        { name: "통영", why: "골목이 좁고 깊어 걸을 맛이 나요" },
+        { name: "목포", why: "시장 골목을 하루 종일 걸어요" },
+      ],
+      jp: [
+        { name: "오사카", why: "걸어서 다니기 좋은 동네가 많아요" },
+        { name: "교토", why: "안쪽 골목까지 걸어 들어가요" },
+        { name: "나고야", why: "덜 붐벼서 골목을 마음껏 걸어요" },
+      ],
+      world: [
+        { name: "타이난", why: "골목 안쪽까지 걸어 들어가요" },
+        { name: "하노이", why: "좁은 골목을 하루 종일 걸어요" },
+      ],
+    },
   },
   AGPN: {
     name: "부지런한 여행 반장",
@@ -412,6 +666,22 @@ const TYPES = {
     complementWhy: "내가 일정을 꽉 채울 때, 그 사람이 쉬엄쉬엄 걷자고 해서 살아나요",
     mate: "AGFN",
     mateWhy: "알차게 도는 게 같고, 그 사람이 중간에 즉흥 코스를 넣어 줘요",
+    countryCities: {
+      kr: [
+        { name: "서울 성수", why: "여럿이 돌기 좋게 동선이 짜여요" },
+        { name: "부산", why: "여럿이 하루에 다 돌 수 있어요" },
+        { name: "여수", why: "바다와 골목을 하루에 묶어 돌아요" },
+      ],
+      jp: [
+        { name: "도쿄", why: "지하철만으로 알차게 돌 수 있어요" },
+        { name: "오사카", why: "먹거리와 볼거리를 하루에 묶어요" },
+        { name: "후쿠오카", why: "짧은 일정에도 알차게 돌아요" },
+      ],
+      world: [
+        { name: "싱가포르", why: "짧게 다녀와도 알찬 도시예요" },
+        { name: "타이베이", why: "하루에 다 돌 수 있는 동선이에요" },
+      ],
+    },
   },
   AGPD: {
     name: "믿음직한 여행 진행자",
@@ -426,6 +696,22 @@ const TYPES = {
     complementWhy: "내가 빽빽하게 짤 때, 그 사람이 여기서 좀 앉자고 해서 숨을 고르게 해요",
     mate: "AGFD",
     mateWhy: "여럿과 익숙한 곳을 좋아하는 게 같아서, 의견이 잘 안 부딪혀요",
+    countryCities: {
+      kr: [
+        { name: "부산", why: "여럿이 다니기 편한 동선이에요" },
+        { name: "경주", why: "익숙한 길로 여럿을 이끌어요" },
+        { name: "여수", why: "해마다 같은 코스로 여럿이 가요" },
+      ],
+      jp: [
+        { name: "후쿠오카", why: "가깝고 익숙해 실수가 없어요" },
+        { name: "오사카", why: "익숙한 동선으로 여럿이 돌기 좋아요" },
+        { name: "도쿄", why: "아는 동선으로 여럿을 데려가요" },
+      ],
+      world: [
+        { name: "방콕", why: "익숙한 코스로 여럿을 데려가요" },
+        { name: "싱가포르", why: "아는 동선으로 여럿을 이끌어요" },
+      ],
+    },
   },
   AGFN: {
     name: "즉흥 여행 흥행사",
@@ -440,6 +726,22 @@ const TYPES = {
     complementWhy: "내가 앞뒤 안 가리고 달릴 때, 그 사람이 쉴 자리와 다음 길을 봐 둬요",
     mate: "AGPN",
     mateWhy: "여럿이 어울리는 게 같아서, 그 사람이 짠 틀 위에 내 즉흥이 얹혀요",
+    countryCities: {
+      kr: [
+        { name: "부산", why: "바다와 시장을 마음대로 오가요" },
+        { name: "강릉", why: "여럿이 즉흥으로 바다까지 가요" },
+      ],
+      jp: [
+        { name: "오사카", why: "여럿이 즉흥으로 놀기 좋아요" },
+        { name: "도쿄", why: "새로 생긴 곳을 다 같이 들어가요" },
+        { name: "삿포로", why: "걷다가 마음에 들면 다 같이 들어가요" },
+      ],
+      world: [
+        { name: "방콕", why: "여럿이 즉흥으로 놀기 좋아요" },
+        { name: "타이베이", why: "야시장에서 밤이 길어요" },
+        { name: "발리", why: "즉흥으로 액티비티를 골라요" },
+      ],
+    },
   },
   AGFD: {
     name: "북적이는 단골 여행단장",
@@ -454,8 +756,149 @@ const TYPES = {
     complementWhy: "내가 앞장서서 끌고 갈 때, 그 사람이 중간에 쉬는 자리를 잡아 줘요",
     mate: "AGPD",
     mateWhy: "여럿을 데리고 다니는 게 같아서, 예약과 동선을 맡겨도 편해요",
+    countryCities: {
+      kr: [
+        { name: "부산", why: "여럿이 해마다 가도 좋아요" },
+        { name: "여수", why: "매년 같은 바다와 식당으로 가요" },
+      ],
+      jp: [
+        { name: "오사카", why: "먹거리가 촘촘해 단체로 좋아요" },
+        { name: "후쿠오카", why: "야타이에서 다 같이 마셔요" },
+        { name: "나고야", why: "큰길로 단체가 움직이기 편해요" },
+      ],
+      world: [
+        { name: "홍콩", why: "트램 타고 단체로 돌기 좋아요" },
+        { name: "방콕", why: "늘 가던 코스로 다 같이 돌아요" },
+      ],
+    },
   },
 };
+
+</script>
+<script>
+/* MYTI Travel · 친구 여행 궁합 — 내 네 글자와 친구 네 글자를 비교해
+   궁합 한 줄, 같이 가면 잘 맞는 점, 부딪히기 쉬운 지점과 역할 분담 팁을 만든다.
+
+   규칙
+     matched = 네 축 중 글자가 같은 개수 (그대로 R=R, A=A …)
+     일치 축 → MATCH_SAME(글자)  : 둘 다 그렇게 하는 장점
+     다른 축 → MATCH_DIFF(축, 내 글자) : 그 차이를 어떻게 나눠 맡을지
+     4/4     → MATCH_CAUTION     : 둘 다 놓치는 '반대편'만 점검
+     0/4     → MATCH_SOLO_SAME   : 겹치는 축이 없어도 상대 덕에 새로 경험하는 점
+*/
+const AXIS_ROLE = { RA: "리듬", SG: "사람", PF: "준비", ND: "취향" };
+
+const MATCH_LEVEL = {
+  4: {
+    title: "리듬이 똑같은 쌍둥이 메이트",
+    line: "좋아하는 것도 속도도 같아서 같이 있으면 편해요. 대신 둘 다 안 보는 쪽만 출발 전에 한 번 점검하세요.",
+  },
+  3: {
+    title: "큰 결은 같고 한 가지만 다른 편한 동행",
+    line: "세 축이 같아 큰 다툼은 없어요. 다른 한 축만 미리 맞춰 두면 아주 편한 동행이에요.",
+  },
+  2: {
+    title: "서로 빈틈을 메워 주는 보완 파트너",
+    line: "좋아하는 결이 반은 같고 반은 달라요. 역할을 나누면 오히려 더 알찬 조합이에요.",
+  },
+  1: {
+    title: "역할 분담이 꼭 필요한 반전 조합",
+    line: "한 축만 겹쳐서 서로 이해하기 어려울 수 있어요. 출발 전에 역할 분담을 꼭 정해 두세요.",
+  },
+  0: {
+    title: "정반대 매력! 각자 시간 보장 필수 조합",
+    line: "넷 다 반대라 같이만 다니면 힘들 수 있어요. 하루에 한 타임씩은 각자 시간을 꼭 보장하세요.",
+  },
+};
+
+const MATCH_SAME = {
+  R: "카페나 풍경 앞에서 오래 머물러도 서로 재촉하지 않아요",
+  A: "하루에 몇 곳을 돌아도 둘 다 아쉬워하지 않아, 동선을 알차게 채워요",
+  S: "사람 많은 자리를 피해 조용한 곳을 고르는 기준이 같아요",
+  G: "여럿이 어울리는 자리에서 둘 다 기분이 올라가요",
+  P: "출발 전 동선과 예약을 미리 맞춰 둬서 현장에서 헤매지 않아요",
+  F: "그날 기분과 날씨에 따라 바로 바꿔도 서로 서운하지 않아요",
+  N: "안 가 본 동네를 보면 둘 다 먼저 들어가 보고 싶어 해요",
+  D: "좋아하는 도시를 다시 찾는 걸 둘 다 아깝게 여기지 않아요",
+};
+
+/* MATCH_DIFF[축][내 글자] — 내가 앞, 친구가 뒤 */
+const MATCH_DIFF = {
+  RA: {
+    R: "친구는 하루에 다섯 곳, 나는 한 곳에 오래 있고 싶어요. 한 타임은 친구가 동선을 짜고 한 타임은 내가 앉을 곳을 정해 번갈아 맡으면 둘 다 만족해요.",
+    A: "나는 아침부터 걷고 싶고 친구는 카페에 앉아 있고 싶어 해요. 오전은 내가 이끌고 오후엔 친구가 고른 카페에서 한 시간씩 쉬면 둘 다 지치지 않아요.",
+  },
+  SG: {
+    S: "친구는 사람이 많을수록 신나고 나는 둘이 편해요. 여럿 모임은 첫날 저녁 한 끼로 몰아 주고 낮 일정은 둘이 다니면 서로 부담이 없어요.",
+    G: "나는 여럿이 어울리고 싶고 친구는 조용한 둘이 좋아요. 모임은 저녁으로 몰아 주고 낮에는 친구와 둘이 조용한 곳을 골라 주면 좋아요.",
+  },
+  PF: {
+    P: "한 사람은 출발 전 숙소·핵심 식당·오가는 길만 예약해 두고, 남는 오후 반나절은 즉흥 담당인 친구에게 통째로 맡기면 서로 스트레스 없이 최고예요. 나는 예약 세 개만 지키고 친구가 찾은 코스를 거절하지 않기, 이 두 가지만 약속하면 돼요.",
+    F: "친구는 지도·동선·식당 예약을 미리 다 해 두는 사람이에요. 그 예약 세 개만 시간 맞춰 지키고 사이 빈 시간은 내가 마음대로 쓰면, 친구는 안심하고 나는 신나요.",
+  },
+  ND: {
+    N: "나는 안 가 본 동네를, 친구는 늘 가던 단골을 원해요. 하루는 친구의 단골 코스로, 하루는 내가 찾은 새 동네로 나누면 둘 다 여행 온 기분이 나요.",
+    D: "나는 아는 동네를 다시 걷고 싶고 친구는 새 동네를 보고 싶어 해요. 반나절은 내 단골 코스, 반나절은 친구가 고른 새 골목으로 나누면 둘 다 아쉽지 않아요.",
+  },
+};
+
+const MATCH_SOLO_SAME = {
+  label: "네 축 모두 반대",
+  text: "서로 전혀 못 보던 풍경과 방식을 상대 덕분에 처음 경험해요",
+};
+
+/* 4/4 완전 일치일 때: 둘 다 놓치기 쉬운 '반대편' */
+const MATCH_CAUTION = {
+  line: "결정은 빠른데, 둘 다 놓치는 반대편만 출발 전에 한 번 점검하세요.",
+  items: {
+    R: "둘 다 쉬는 쪽이라 하루가 흘러가요 → 한 곳은 미리 정해 두기",
+    A: "둘 다 걷기만 해 저녁엔 녹초가 돼요 → 오후 한 시간은 앉을 곳 정해 두기",
+    S: "둘 다 조용해서 현지 사람 만날 일이 없어요 → 한 끼는 카운터석·야타이에서",
+    G: "여럿이다 보니 결정이 늦어져요 → 첫날 저녁 한 끼만 미리 예약",
+    P: "일정이 빡빡해져 둘 다 지쳐요 → 오후 한 칸은 비워 두기",
+    F: "웨이팅·만석 위험이 커요 → 첫 끼니와 숙소만은 예약",
+    N: "새 곳만 찾다 쉬어 갈 데가 없어요 → 한 끼는 검증된 단골집으로",
+    D: "익숙한 곳만 돌아 새 재미가 없어요 → 하루는 안 가 본 동네로",
+  },
+};
+
+function matchInfo(mine, friend) {
+  const m = String(mine || "").toUpperCase();
+  const f = String(friend || "").toUpperCase();
+  const same = [];
+  const diff = [];
+  AXES.forEach((ax, i) => {
+    const a = m.charAt(i);
+    const b = f.charAt(i);
+    if (a === b) {
+      same.push({ label: a + " " + ax.names[a], text: MATCH_SAME[a] });
+    } else {
+      diff.push({
+        label: AXIS_ROLE[ax.key] + " " + a + "↔" + b,
+        text: MATCH_DIFF[ax.key][a],
+      });
+    }
+  });
+  const matched = same.length;
+  const t = TYPES[f];
+  const info = {
+    mine: m,
+    code: f,
+    name: t ? t.name : "",
+    matched: matched,
+    level: MATCH_LEVEL[matched],
+    same: matched === 0 ? [MATCH_SOLO_SAME] : same,
+    diff: diff,
+    caution: null,
+  };
+  if (matched === 4) {
+    info.caution = {
+      line: MATCH_CAUTION.line,
+      items: m.split("").map((ch) => ({ label: ch, text: MATCH_CAUTION.items[ch] })),
+    };
+  }
+  return info;
+}
 
 </script>
 <script>
@@ -1059,9 +1502,11 @@ function scoreAnswers(answers) {
     }
     const res = scoreAnswers(answers);
     result = Object.assign(buildCardData(res.code), { axes: res.axes, counts: res.counts });
+    result.countryCities = TYPES[res.code].countryCities || { kr: [], jp: [], world: [] };
     applyTheme(result.code);
     drawCard();
     renderDetail();
+    renderExtras();
     show("result");
   }
 
@@ -1119,6 +1564,128 @@ function scoreAnswers(answers) {
   function esc(s) {
     return String(s == null ? "" : s).replace(/[&<>"]/g, (c) =>
       ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  }
+
+  /* ---------------- 나라별 맞춤 도시 ---------------- */
+  const CITY_TABS = [
+    { key: "kr", label: "한국" },
+    { key: "jp", label: "일본" },
+    { key: "world", label: "다른 해외" },
+  ];
+  // 화면 주소(예: …/travel/)에 그대로 ?with= 를 붙여 친구에게 보낼 수 있게 한다
+  const PAGE_URL = /^https?:/.test(location.protocol)
+    ? location.origin + location.pathname
+    : "https://btal1052-a11y.github.io/taste-test/travel/";
+
+  let cityTab = "kr"; // 기본은 국내(한국)부터
+  let friendCode = "";
+
+  // ?with=AGFN 처럼 친구 코드가 담겨 오면 그 친구로 맞춰 둔다(없거나 틀리면 무시)
+  function friendFromUrl() {
+    try {
+      const v = (new URLSearchParams(location.search).get("with") || "").toUpperCase();
+      return TYPES[v] ? v : "";
+    } catch (e) {
+      return "";
+    }
+  }
+
+  function renderExtras() {
+    cityTab = "kr";
+    friendCode = friendFromUrl() || result.complementCode;
+    renderCityTabs();
+    renderCityList();
+    renderAxisPick();
+    renderMate();
+  }
+
+  function renderCityTabs() {
+    $("cityTabs").innerHTML = CITY_TABS.map((t) =>
+      '<button type="button" class="seg-btn' + (t.key === cityTab ? " on" : "") + '" role="tab" ' +
+      'aria-selected="' + (t.key === cityTab) + '" data-country="' + t.key + '">' + t.label + "</button>"
+    ).join("");
+  }
+
+  function renderCityList() {
+    const cc = result.countryCities || {};
+    const list = cc[cityTab] || [];
+    $("cityList").innerHTML = list.map((c) =>
+      "<li><b>" + esc(c.name) + "</b><span>" + esc(c.why) + "</span></li>"
+    ).join("");
+  }
+
+  /* ---------------- 친구 코드 궁합 ---------------- */
+  function renderAxisPick() {
+    $("axisPick").innerHTML = AXES.map((ax, i) => {
+      const pill = [ax.left, ax.right].map((ch) => {
+        const on = friendCode.charAt(i) === ch;
+        return '<button type="button" class="pick-btn' + (on ? " on" : "") + '" data-i="' + i +
+          '" data-letter="' + ch + '" aria-pressed="' + on + '" aria-label="' + ch + " " + ax.names[ch] +
+          '"><b>' + ch + "</b><i>" + ax.names[ch] + "</i></button>";
+      }).join("");
+      return '<div class="pick"><div class="pick-cap">' + AXIS_ROLE[ax.key] + "</div>" +
+        '<div class="pick-pill">' + pill + "</div></div>";
+    }).join("");
+  }
+
+  function mateItem(label, text) {
+    return "<li>" + (label ? "<b>" + esc(label) + "</b>" : "") + "<span>" + esc(text) + "</span></li>";
+  }
+
+  function renderMate() {
+    const info = matchInfo(result.code, friendCode);
+    let html =
+      '<div class="matehead"><b>' + esc(info.code) + "</b><em>" + esc(info.name) + "</em></div>" +
+      '<div class="badge' + (info.matched <= 1 ? " warm" : "") + '">' + info.matched + "/4 일치 · " +
+      esc(info.level.title) + "</div>" +
+      '<p class="mline">' + esc(info.level.line) + "</p>" +
+      '<div class="mblock"><h4>✅ 같이 가면 잘 맞는 점</h4><ul>' +
+      info.same.map((x) => mateItem(x.label, x.text)).join("") + "</ul></div>";
+    if (info.diff.length) {
+      html += '<div class="mblock"><h4>⚡ 부딪히기 쉬운 지점 &amp; 역할 분담 팁</h4><ul>' +
+        info.diff.map((x) => mateItem(x.label, x.text)).join("") + "</ul></div>";
+    }
+    if (info.caution) {
+      html += '<div class="mblock caution"><h4>🔎 둘 다 놓치기 쉬운 것</h4>' +
+        '<p class="mline" style="margin-top:0">' + esc(info.caution.line) + "</p><ul>" +
+        info.caution.items.map((x) => mateItem(x.label, x.text)).join("") + "</ul></div>";
+    }
+    $("mateOut").innerHTML = html;
+    $("mateSub").textContent = "친구 네 글자를 누르면 바로 바뀌어요 · 내 결 " + result.code + " 기준";
+  }
+
+  function mateText() {
+    const info = matchInfo(result.code, friendCode);
+    const lines = [
+      "내 여행 유형 " + result.code + " · " + result.nickname,
+      "친구 " + info.code + " · " + info.name,
+      info.matched + "/4 일치 · " + info.level.title,
+      info.level.line,
+      "",
+      "✅ 같이 가면 잘 맞는 점",
+    ];
+    info.same.forEach((x) => lines.push("· " + (x.label ? x.label + " — " : "") + x.text));
+    if (info.diff.length) {
+      lines.push("", "⚡ 부딪히기 쉬운 지점 & 역할 분담 팁");
+      info.diff.forEach((x) => lines.push("· " + x.label + " — " + x.text));
+    }
+    if (info.caution) {
+      lines.push("", "🔎 둘 다 놓치기 쉬운 것", info.caution.line);
+      info.caution.items.forEach((x) => lines.push("· " + x.text));
+    }
+    lines.push("", "친구도 해 보게 하려면: " + PAGE_URL + "?with=" + result.code);
+    lines.push("MYTI Travel · 나의 여행 결");
+    return lines.join("\n");
+  }
+
+  function copyMate() {
+    const text = mateText();
+    const done = () => toast("궁합 결과를 복사했어요. 친구에게 붙여넣기만 하면 됩니다.");
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
+    } else {
+      fallbackCopy(text, done);
+    }
   }
 
   function shareText() {
@@ -1317,6 +1884,25 @@ function scoreAnswers(answers) {
   $("btnBack").addEventListener("click", back);
   $("btnSave").addEventListener("click", saveImage);
   $("btnCopy").addEventListener("click", copyText);
+  $("btnCopyMate").addEventListener("click", copyMate);
+  $("cityTabs").addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-country]");
+    if (!btn) return;
+    cityTab = btn.getAttribute("data-country");
+    renderCityTabs();
+    renderCityList();
+  });
+  $("axisPick").addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-letter]");
+    if (!btn) return;
+    const i = Number(btn.getAttribute("data-i"));
+    if (!(i >= 0 && i < 4)) return;
+    const letters = friendCode.split("");
+    letters[i] = btn.getAttribute("data-letter");
+    friendCode = letters.join("");
+    renderAxisPick();
+    renderMate();
+  });
   $("btnAgain").addEventListener("click", () => {
     if (confirm("답한 내용이 지워집니다. 처음부터 다시 할까요?")) start(true);
   });
