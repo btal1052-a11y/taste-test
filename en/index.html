@@ -161,7 +161,7 @@
     <div class="resulthead">
       <span class="label">MYTI Result</span>
     </div>
-    <div class="cardwrap"><canvas id="cardCanvas" width="1080" height="1350"></canvas><img id="cardImg" alt="Your result card" /></div>
+    <div class="cardwrap"><canvas id="cardCanvas" width="1080" height="1500"></canvas><img id="cardImg" alt="Your result card" /></div>
     <div class="actions">
       <button class="btn btn-primary" id="btnSave">Save the result card</button>
       <div class="btnrow">
@@ -206,6 +206,7 @@ const TYPES = {
     line2: "A lesson only counts once I've tried it on my feet.",
     likes: ["Weekend hiking club", "Community garden plot", "Day trip by train out of town"],
     drain: "A long explanation with nowhere to move is the worst part of my week.",
+    vision: "What you learn on your feet is worth passing on. Run a small club, or teach a one-day class. Keep a photo or a line of notes from each outing and the learning stacks up.",
     clash: "CGUV",
   },
   AGNV: {
@@ -214,6 +215,7 @@ const TYPES = {
     line2: "Knowing one tree's name changes the whole walk.",
     likes: ["Ranger-led nature walk", "Wildflower photo walk", "Drive out to the woods or the coast"],
     drain: "Being hurried past a place with no explanation leaves me flat.",
+    vision: "You're good at passing on what you've found out. Lead the commentary on a walk, or write it up in a few lines. A photo and a note from each trip become a field notebook of your own.",
     clash: "CGUM",
   },
   AGUM: {
@@ -222,6 +224,7 @@ const TYPES = {
     line2: "One lesson in, I want it properly mine.",
     likes: ["Weekly tennis lessons", "Golf swing clinic", "City trip that follows the side streets"],
     drain: "Weeks at the same level, with nothing moving, wear me down.",
+    vision: "The skill you've built is best passed on. Start a club, or teach what you know. A line in a practice log shows the progress you'd otherwise miss.",
     clash: "CGNV",
   },
   AGUV: {
@@ -230,6 +233,7 @@ const TYPES = {
     line2: "I care more about how it's played than who wins.",
     likes: ["Season tickets with friends", "Architecture walking tour", "Markets and museum days"],
     drain: "I go quiet when people only want the final score.",
+    vision: "Reading a game is a gift worth talking about. Write it up, or bring a few friends to the next match. One scene written down and the day stays with you.",
     clash: "CGNM",
   },
   ARNM: {
@@ -238,6 +242,7 @@ const TYPES = {
     line2: "My hands go first; nobody has to grade the result.",
     likes: ["Saturday at the allotment", "One-day pottery class", "Casual running group"],
     drain: "Anywhere the work gets graded, my hands freeze up.",
+    vision: "Nothing here has to be sold or graded. Time with your hands in the soil is the pause that lets the week start again. Giving what you make to someone close is enough.",
     clash: "CRUV",
   },
   ARNV: {
@@ -246,6 +251,7 @@ const TYPES = {
     line2: "No destination — and if I find a good spot, I stay.",
     likes: ["Sunset walk by the river", "Countryside trail on a Sunday", "Blossom and autumn-leaf walks"],
     drain: "Being hurried along a walk drains me within minutes.",
+    vision: "This is a taste that doesn't have to produce anything. Walking and looking builds a kind of room inside you. Note the spots you like and you'll have a route of your own.",
     clash: "CRUM",
   },
   ARUM: {
@@ -254,6 +260,7 @@ const TYPES = {
     line2: "Start light, have a laugh, that's plenty.",
     likes: ["Swim or aqua-aerobics class", "Yoga and pilates studio", "Bike loop along the river"],
     drain: "Keeping score seriously takes the fun out of it for me.",
+    vision: "You don't have to be good at it to enjoy it. Moving lightly is what loosens the tight parts of a week. Share the time with people you like and it lasts.",
     clash: "CRNV",
   },
   ARUV: {
@@ -262,6 +269,7 @@ const TYPES = {
     line2: "Half the fun is the food in the stadium.",
     likes: ["Food crawl around the stadium", "Outdoor festival or live show", "Big game at a sports bar"],
     drain: "Sitting still through a long talk with no snack and no action.",
+    vision: "Cheering and eating well doesn't have to turn into anything. Being there with people is the whole point. Some days, sit quietly on your own and let the noise go.",
     clash: "CRNM",
   },
   CGNM: {
@@ -270,6 +278,7 @@ const TYPES = {
     line2: "Once I start, I want the last detail right.",
     likes: ["Weekly pottery class", "Leatherwork evening course", "Bread and pastry class"],
     drain: "Being pushed for speed over finish takes it all out of me.",
+    vision: "Finishing things by hand is a skill other people notice. Teach a class, or find someone to share a studio with. Add a city walk or light yoga and it lasts longer.",
     clash: "AGUV",
   },
   CGNV: {
@@ -278,6 +287,7 @@ const TYPES = {
     line2: "If something interests me, I read to the end of it.",
     likes: ["Book club with real discussion", "Evening lecture series", "Conversation class in another language"],
     drain: "Short summaries with no context leave me unsatisfied.",
+    vision: "What you read and hear becomes solid when you organize it for others. Write it short, or lead a reading group. Walk one set route while you think and it stays sustainable.",
     clash: "AGUM",
   },
   CGUM: {
@@ -286,6 +296,7 @@ const TYPES = {
     line2: "Looking isn't enough; I want a go at it myself.",
     likes: ["Piano or guitar lessons", "Language meetup", "Photography class and photo walks"],
     drain: "A whole day of only looking, with nothing learned, feels hollow.",
+    vision: "Learning an art form gives you a way to bring people together. Start a small music night, or a class. A city walk or some yoga on the side keeps it steady.",
     clash: "AGNV",
   },
   CGUV: {
@@ -294,6 +305,7 @@ const TYPES = {
     line2: "Afterwards I go looking for the reviews and the notes.",
     likes: ["Play and musical theater group", "Museum tour with a curator", "Reading in the original language"],
     drain: "Seeing a show and then heading straight to the next thing, with nothing said about it, is a letdown.",
+    vision: "The eye you've built on your own can turn into a short piece of writing, or a small curated list. What you're collecting now can become a second kind of work, or a seed of your own. Add a city walk or light yoga for the body's rhythm.",
     clash: "AGNM",
   },
   CRNM: {
@@ -302,6 +314,7 @@ const TYPES = {
     line2: "However they turn out, the making is the good part.",
     likes: ["Film photography walk", "Knitting and embroidery circle", "Herbs on the balcony"],
     drain: "Anywhere finished work gets compared like a score.",
+    vision: "The photos don't have to be good. The slow part, while you're shooting, is the whole thing. Leave the rolls in a drawer and open them now and then.",
     clash: "ARUV",
   },
   CRNV: {
@@ -310,6 +323,7 @@ const TYPES = {
     line2: "One good sentence can make a day.",
     likes: ["Quiet reading group", "Second-hand bookshops and book cafés", "Classical listening evening"],
     drain: "A day packed tight from morning to night leaves me empty.",
+    vision: "You can put down the pressure to read more. Staying with one sentence is what fills a day. Copy out the lines you love and they become a window back to yourself later.",
     clash: "ARUM",
   },
   CRUM: {
@@ -318,6 +332,7 @@ const TYPES = {
     line2: "The mood in the room matters more than the recipe.",
     likes: ["One-day baking class", "Board game café night", "A glass of wine with people"],
     drain: "The moment it has to be good, the fun goes out of it.",
+    vision: "No skill to show, nothing to sell. Making something and eating it together is the point. A day where you make nothing at all is fine too.",
     clash: "ARNV",
   },
   CRUV: {
@@ -326,6 +341,7 @@ const TYPES = {
     line2: "Good music, one good drink, and I'm set.",
     likes: ["Live jazz in a small bar", "Film club, then an argument", "Eating around a smaller city"],
     drain: "Anything with a lot of explanation and homework bores me quickly.",
+    vision: "You don't have to prove your taste. Good music and one good drink are enough. That ease is what lets the week breathe. Share the table with the right people and it lasts longer.",
     clash: "ARNM",
   },
 };
@@ -344,7 +360,7 @@ const AXES = [
    The page and the sample PNGs both draw through this one function, so they can't drift apart. */
 
 const CARD_W = 1080;
-const CARD_H = 1350;
+const CARD_H = 1500;
 
 function cardPalette(code) {
   // C (calm, taste) = deep sage · A (active, sweat) = terracotta
@@ -556,12 +572,17 @@ function drawTasteCard(ctx, d, opt) {
   const sumLH = 48;
   const drainSize = 23;
   const drainLH = 33;
+  const visionSize = 23;
+  const visionLH = 33;
   ctx.font = f(400, sumSize);
   const sumLines = wrapText(ctx, d.summary, CW - 4);
   const sumH = sumLines.length * sumLH;
   ctx.font = f(400, drainSize);
   const drainLines = d.drain ? wrapText(ctx, d.drain, CW - 4) : [];
   const drainH = drainLines.length * drainLH;
+  ctx.font = f(400, visionSize);
+  const visionLines = d.vision ? wrapText(ctx, d.vision, CW - 4) : [];
+  const visionH = visionLines.length * visionLH;
   const subH = 32;
   const rowH = 70;
   const rowGap = 12;
@@ -570,15 +591,16 @@ function drawTasteCard(ctx, d, opt) {
   const likeRows = (d.likes || []).length;
 
   const G = { preDiv: 18, postDiv: 20, axesLabel: 32, preLike: 14, postLikeDiv: 16, likeLabel: 27,
-              preDrain: 16, postDrainDiv: 18, drainLabel: 29 };
+              preDrain: 16, postDrainDiv: 18, drainLabel: 29,
+              preVision: 16, postVisionDiv: 18, visionLabel: 30 };
   const gapsSum = G.preDiv + G.postDiv + G.axesLabel + G.preLike + G.postLikeDiv + G.likeLabel +
-    G.preDrain + G.postDrainDiv + G.drainLabel;
+    G.preDrain + G.postDrainDiv + G.drainLabel + G.preVision + G.postVisionDiv + G.visionLabel;
 
   const startY = nickBase + 40; // top of the first summary line
   const boxH = 178;
   const boxY = H - M - boxH;
   const limit = boxY - 34 - startY;
-  const fixed = sumH + subH + axesH + likeLH * likeRows + drainH;
+  const fixed = sumH + subH + axesH + likeLH * likeRows + drainH + visionH;
   // Spread leftover room between the blocks so the card never looks bottom-empty;
   // if it overflows, shrink the gaps proportionally so the pair box is never touched.
   const slack = limit - (fixed + gapsSum);
@@ -717,6 +739,27 @@ function drawTasteCard(ctx, d, opt) {
     }
   }
 
+  const drainBottom = y;
+
+  /* ---------- looking ahead ---------- */
+  if (visionLines.length) {
+    y += g(G.preVision);
+    rule(y);
+    y += g(G.postVisionDiv);
+
+    ctx.fillStyle = p.accent;
+    ctx.font = f(600, 18);
+    drawSpaced(ctx, "LOOKING AHEAD", M, y + 2, 3.4);
+    y += g(G.visionLabel);
+
+    ctx.fillStyle = p.ink;
+    ctx.font = f(400, visionSize);
+    for (const ln of visionLines) {
+      ctx.fillText(ln, M, y);
+      y += visionLH;
+    }
+  }
+
   /* ---------- pairings (two rows: great match / tricky pair) ---------- */
   ctx.fillStyle = p.tint;
   roundRect(ctx, M, boxY, CW, boxH, 18);
@@ -745,7 +788,9 @@ function drawTasteCard(ctx, d, opt) {
                    headGap: headGap, headLeftW: Math.round(headLeftW),
                    headRightX: Math.round(headRightX), nickSize: nickSize,
                    pairSize: Math.min(matchSize, clashSize),
-                   sumLines: sumLines.length, drainLines: drainLines.length };
+                   squeeze: squeeze,
+                   sumLines: sumLines.length, drainLines: drainLines.length,
+                   visionLines: visionLines.length, visionBottom: y, drainBottom: drainBottom };
   return ctx.canvas;
 }
 
@@ -762,6 +807,7 @@ function buildCardData(code) {
     sub: t.line2,
     likes: t.likes,
     drain: t.drain,
+    vision: t.vision,
     matchCode: matchCode,
     matchName: TYPES[matchCode].name,
     clashCode: clashCode,
@@ -941,6 +987,8 @@ function scoreAnswers(answers) {
   function drawCardOnce() {
     if (!result) return;
     const canvas = $("cardCanvas");
+    if (canvas.width !== CARD_W) canvas.width = CARD_W;
+    if (canvas.height !== CARD_H) canvas.height = CARD_H;
     const ctx = canvas.getContext("2d");
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, CARD_W, CARD_H);
@@ -955,6 +1003,7 @@ function scoreAnswers(answers) {
       "“" + t.summary + "”",
       "What drains me: " + t.drain,
       "Activities to try: " + t.likes.join(" / "),
+      "Looking ahead: " + t.vision,
       "Great match: " + t.matchCode + " " + t.matchName,
       "Tricky pair: " + t.clashCode + " " + t.clashName,
       "",
